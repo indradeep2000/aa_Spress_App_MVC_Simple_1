@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta charset="UTF-8">
+      <title>MVC App 1</title>
+      <script id="sap-ui-bootstrap"
+         src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+         data-sap-ui-libs="sap.m"
+         data-sap-ui-theme="sap_fiori_3"
+         data-sap-ui-compatVersion="edge"></script>
+      <script>
+         // your coding will go here
+         //*********************************************************************
+         // application data 1
+         //*********************************************************************
+         var oData1 = {
+			"CountSuppliers" : "2",
+			"Suppliers":[  
+				{  
+					"ID":0,
+					"Name":"Exotic Liquids",
+					"Address":{  
+						"Street":"NE 228th",
+						"City":"Sammamish",
+						"State":"WA",
+						"ZipCode":"98074",
+						"Country":"USA"
+					}
+				},
+				{  
+					"ID":1,
+					"Name":"Tokyo Traders",
+					"Address":{  
+						"Street":"NE 40th",
+						"City":"Redmond",
+						"State":"WA",
+						"ZipCode":"98052",
+						"Country":"USA"
+					}
+				}
+			]
+		};  //	var oData 
+		
+		 //*********************************************************************
+         // application data 2
+         //*********************************************************************
+         var oData2 = {
+			"CountSuppliers" : "2",
+			"Suppliers":[  
+				{  
+					"ID":0,
+					"Name":"Indian Liquids",
+					"Address":{  
+						"Street":"NE 228th",
+						"City":"Sammamish",
+						"State":"WA",
+						"ZipCode":"98074",
+						"Country":"USA"
+					}
+				},
+				{  
+					"ID":1,
+					"Name":"Indian Traders",
+					"Address":{  
+						"Street":"NE 40th",
+						"City":"Redmond",
+						"State":"WA",
+						"ZipCode":"98052",
+						"Country":"USA"
+					}
+				}
+			]
+		};  //	var oData 
+		
+		
+		//*********************************************************************
+		
+		//*********************************************************************
+		// model creation and setting data
+		var oModel1 = new sap.ui.model.json.JSONModel();
+		oModel1.setData(oData1);
+		
+		var oModel2 = new sap.ui.model.json.JSONModel();
+		oModel2.setData(oData2);
+
+		//*********************************************************************
+		
+		
+		//*********************************************************************
+		// setting the model to the core
+		// so that it’s available in the whole application
+		sap.ui.getCore().setModel(oModel1,"model1");
+		sap.ui.getCore().setModel(oModel2,"model2");
+		
+		//*********************************************************************
+		//*********************************************************************
+		// Create columns
+		//*********************************************************************
+		var aColumns = [ 
+			new sap.m.Column({
+				header : new sap.m.Text({
+					text : "ID"
+				})
+			}),
+			new sap.m.Column({
+				header : new sap.m.Text({
+					text : "Name"
+				})
+			})
+		];
+		//*********************************************************************
+		// Create Column List Item
+		//*********************************************************************
+				var oTemplate = new sap.m.ColumnListItem({
+			cells : [
+				new sap.m.ObjectIdentifier({
+					text : "{ID}"
+				}),
+				new sap.m.ObjectIdentifier({
+					text : "{Name}"
+				})
+			]
+		});
+		//*********************************************************************
+		// in the header, we’re displaying the number of suppliers
+		//*********************************************************************
+		//var oModel1 = sap.ui.getCore().getModel("model1");
+		// Accessing a property from model1
+		//var var_count_suppliers = oModel1.getProperty("/CountSuppliers");
+		//var text_suppliers = "Number of Suppliers: " + var_count_suppliers;
+		//console.log(var_count_suppliers);
+		//console.log(text_suppliers);
+		var oTableHeader = new sap.m.Toolbar({
+				content : [
+					new sap.m.Title({
+					text : "Number of Suppliers: {model2>/CountSuppliers}"   // This is working
+				})
+			]
+		});
+		//*********************************************************************
+		// Create and bind table
+		//*********************************************************************
+			var oTable = new sap.m.Table({
+			columns : aColumns,
+			headerToolbar : oTableHeader
+		});
+		//var VarItemSuppliers =  oModel1.getProperty("/Suppliers");
+		//console.log(VarItemSuppliers);
+		//oTable.bindItems( "model1>/Suppliers", oTemplate);
+		var v_suppliers =  oModel2.getProperty("/Suppliers");
+		console.log(v_suppliers);
+		//var oModel1 = new sap.ui.model.json.JSONModel();
+		// ... configure and set the model data ...
+
+		//sap.ui.getCore().setModel(oModel1, "model1");
+
+		// Retrieve the model from the core
+		var retrievedModel2 = sap.ui.getCore().getModel("model2");
+
+		// Validate if the retrieved model matches the expected model object
+		if (retrievedModel2 === oModel2) {
+			console.log("Model 'model2' has been correctly set inside the core.");
+		} else {
+			console.log("Model 'model2' has not been set correctly inside the core.");
+		}
+	
+		oTable.bindItems({
+			path: "model2>/Suppliers",   // This is not working 
+			template: oTemplate
+		});
+		oTable.addStyleClass("sapUiResponsiveMargin");
+		//*********************************************************************
+		// Create Page , App and and Page to the App
+		//*********************************************************************
+		
+		var oPageMaster = new sap.m.Page("masterPage", {
+			title : "Supplier Overview",
+			content : [oTable]
+		});
+		
+		var oApp = new sap.m.App();
+		oApp.addPage(oPageMaster);
+		oApp.placeAt("content");
+		
+		
+		
+      </script>
+   </head>
+   <body class="sapUiBody" role="application">
+      <div id="content"></div>
+   </body>
+</html>

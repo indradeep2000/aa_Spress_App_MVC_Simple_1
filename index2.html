@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta charset="UTF-8">
+      <title>MVC App 1</title>
+      <script id="sap-ui-bootstrap"
+         src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+         data-sap-ui-libs="sap.m"
+         data-sap-ui-theme="sap_fiori_3"
+         data-sap-ui-compatVersion="edge"></script>
+      <script>
+         // your coding will go here
+         //*********************************************************************
+         // application data
+         var oData = {
+			"CountSuppliers" : "2",
+			"Suppliers":[  
+				{  
+					"ID":0,
+					"Name":"Exotic Liquids",
+					"Address":{  
+						"Street":"NE 228th",
+						"City":"Sammamish",
+						"State":"WA",
+						"ZipCode":"98074",
+						"Country":"USA"
+					}
+				},
+				{  
+					"ID":1,
+					"Name":"Tokyo Traders",
+					"Address":{  
+						"Street":"NE 40th",
+						"City":"Redmond",
+						"State":"WA",
+						"ZipCode":"98052",
+						"Country":"USA"
+					}
+				}
+			]
+		};  //	var oData 
+		//*********************************************************************
+		
+		//*********************************************************************
+		// model creation and setting data
+		var oModel = sap.ui.model.json.JSONModel();
+		oModel.setData(oData);
+		//*********************************************************************
+		
+		
+		//*********************************************************************
+		// setting the model to the core
+		// so that it’s available in the whole application
+		sap.ui.getCore().setModel(oModel);
+		//*********************************************************************
+		//*********************************************************************
+		// Create columns
+		//*********************************************************************
+		var aColumns = [ 
+			new sap.m.Column({
+				header : new sap.m.Text({
+					text : "ID"
+				})
+			}),
+			new sap.m.Column({
+				header : new sap.m.Text({
+					text : "Name"
+				})
+			})
+		];
+		//*********************************************************************
+		// Create Column List Item
+		//*********************************************************************
+				var oTemplate = new sap.m.ColumnListItem({
+			cells : [
+				new sap.m.ObjectIdentifier({
+					text : "{ID}"
+				}),
+				new sap.m.ObjectIdentifier({
+					text : "{Name}"
+				})
+			]
+		});
+		//*********************************************************************
+		// in the header, we’re displaying the number of suppliers
+		//*********************************************************************
+		var oTableHeader = new sap.m.Toolbar({
+				content : [
+					new sap.m.Title({
+					text : "Number of Suppliers: {/CountSuppliers}"
+				})
+			]
+		});
+		//*********************************************************************
+		// Create and bind table
+		//*********************************************************************
+			var oTable = new sap.m.Table({
+			columns : aColumns,
+			headerToolbar : oTableHeader
+		});
+		
+		oTable.bindItems("/Suppliers", oTemplate);
+		oTable.addStyleClass("sapUiResponsiveMargin");
+		//*********************************************************************
+		// Create Page , App and and Page to the App
+		//*********************************************************************
+		
+		var oPageMaster = new sap.m.Page("masterPage", {
+			title : "Supplier Overview",
+			content : [oTable]
+		});
+		
+		var oApp = new sap.m.App();
+		oApp.addPage(oPageMaster);
+		oApp.placeAt("content");
+		
+		
+		
+      </script>
+   </head>
+   <body class="sapUiBody" role="application">
+      <div id="content"></div>
+   </body>
+</html>
